@@ -10,12 +10,14 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import ch.uzh.csg.mbps.client.util.BaseUriHandler;
+import ch.uzh.csg.mbps.client.util.Constants;
 
 /**
  * The Login Activity is the first view of the application. The user has to sign
  * in with the username and password to use the application.
  */
-public class LoginActivity extends AbstractLoginActivity {
+public class LoginActivity extends AbstractLoginActivity{
 	// constant to determine which sub-activity returns
 	private static final int REQUEST_CODE = 1;
 	private Button signInBtn;
@@ -42,7 +44,7 @@ public class LoginActivity extends AbstractLoginActivity {
     	signUpBtn = (Button) findViewById(R.id.loginSignUpBtn);
     	resetPassword = (TextView) findViewById(R.id.loginPasswordOrUsernameForgottenTextView);
         
-    	retrieveLastSignedUsername();
+    	retrieveLastSignedUsernameAndServerURL();
     	
     	initClickListener();
     }
@@ -57,15 +59,22 @@ public class LoginActivity extends AbstractLoginActivity {
 		return false;
 	}
     
-	private void retrieveLastSignedUsername() {
-		SharedPreferences sharedPref = getSharedPreferences(getResources().getString(R.string.stored_username), Context.MODE_PRIVATE);
-		String storedUsername = sharedPref.getString(getString(R.string.stored_username), "");
+	private void retrieveLastSignedUsernameAndServerURL() {
+		SharedPreferences sharedPref = getSharedPreferences(Constants.STORED_STRINGS, Context.MODE_PRIVATE);
+		String storedUsername = sharedPref.getString(Constants.STORED_USERNAME, "");
 		EditText usernameEditText = (EditText) findViewById(R.id.loginUsernameEditText);
 		usernameEditText.setText(storedUsername);
 		if (!storedUsername.isEmpty()) {
 			username = storedUsername;
 			EditText password = (EditText) findViewById(R.id.loginPasswordEditText);
 			password.requestFocus();
+		}
+		
+		String storedUrl = sharedPref.getString(Constants.STORED_URL, "");
+		EditText urlEditText = (EditText) findViewById(R.id.loginServerEditText);
+		urlEditText.setText(storedUrl);
+		if (!storedUrl.isEmpty()) {
+			serverUrl = storedUrl;
 		}
 	}
 
@@ -74,9 +83,13 @@ public class LoginActivity extends AbstractLoginActivity {
 			public void onClick(View v) {
 				username = ((EditText) findViewById(R.id.loginUsernameEditText)).getText().toString();
 				password = ((EditText) findViewById(R.id.loginPasswordEditText)).getText().toString();
+				serverUrl = ((EditText) findViewById(R.id.loginServerEditText)).getText().toString();
+				usernameUrl = username+"@"+serverUrl;
 				
 				if (username.isEmpty() || password.isEmpty())
 					displayResponse(getResources().getString(R.string.enter_username_password));
+				else if(serverUrl.isEmpty())
+					displayResponse(getResources().getString(R.string.enter_server_url));
 				else{
 					// hide virtual keyboard
 					InputMethodManager inputManager = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE); 
@@ -111,10 +124,20 @@ public class LoginActivity extends AbstractLoginActivity {
 		if (resultCode == RESULT_OK && requestCode == REQUEST_CODE) {
 			if (data.hasExtra("username")) {
 				// if edit text field is not empty clear it
-				if (((EditText) findViewById(R.id.loginPasswordEditText)).getText().length() > 0)
-					((EditText) findViewById(R.id.loginPasswordEditText)).setText("");
+				if (((EditText) findViewById(R.id.loginUsernameEditText)).getText().length() > 0)
+					((EditText) findViewById(R.id.loginUsernameEditText)).setText("");
 
 				((EditText) findViewById(R.id.loginUsernameEditText)).setText(data.getExtras().getString("username"));
+			}
+			
+			if (data.hasExtra("serverUrl")){
+				// if edit text field is not empty clear it
+				if (((EditText) findViewById(R.id.loginServerEditText)).getText().length() > 0)
+					((EditText) findViewById(R.id.loginServerEditText)).setText("");
+				
+				((EditText) findViewById(R.id.loginServerEditText)).setText(data.getExtras().getString("serverUrl"));
+			} else {
+				((EditText) findViewById(R.id.loginServerEditText)).setText(BaseUriHandler.getInstance().getBaseUriSSL());
 			}
 		}
 	}	
