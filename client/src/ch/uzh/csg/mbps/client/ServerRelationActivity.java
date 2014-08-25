@@ -18,11 +18,14 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
+import ch.uzh.csg.mbps.client.request.ServerAccountRequestTask;
 import ch.uzh.csg.mbps.client.util.ClientController;
+import ch.uzh.csg.mbps.client.util.Constants;
 import ch.uzh.csg.mbps.client.util.ServerAccountsTransactionFormatter;
 import ch.uzh.csg.mbps.client.util.TimeHandler;
 import ch.uzh.csg.mbps.model.ServerAccount;
 import ch.uzh.csg.mbps.responseobject.ServerAccountTransferObject;
+import ch.uzh.csg.mbps.responseobject.ServerAccountsRequestObject;
 
 public class ServerRelationActivity extends AbstractAsyncActivity {
 	private ServerAccountTransferObject sato;
@@ -141,6 +144,34 @@ public class ServerRelationActivity extends AbstractAsyncActivity {
 			
 			this.urlPage = urlPage;
 
+			ServerAccountsRequestObject request = new ServerAccountsRequestObject();
+			request.setUrlPage(urlPage);
+			
+			ServerAccountRequestTask getServerAccounts = new ServerAccountRequestTask(new IAsyncTaskCompleteListener<ServerAccountTransferObject>() {
+				@Override
+				public void onTaskComplete(ServerAccountTransferObject response) {
+					dismissProgressDialog();
+					
+					if(response.isSuccessful()) {
+						if(ClientController.isOnline()){
+							startTimer(TimeHandler.getInstance().getRemainingTime(), 1000);
+						}
+						
+						sato = response;
+						if (sato != null) {
+							write();
+						}
+					} else {
+						sato = null;
+						if (response.getMessage().equals(Constants.REST_CLIENT_ERROR)) {
+							reload(getIntent());
+							invalidateOptionsMenu();
+						}
+					}
+				}
+
+			}, request, new ServerAccountTransferObject());
+			getServerAccounts.execute();
 		}
 	}
 	
