@@ -29,7 +29,7 @@ import ch.uzh.csg.mbps.responseobject.UserAccountObject;
 /**
  * This class is the view where a user can create an account.
  */
-public class RegistrationActivity extends AbstractAsyncActivity implements IAsyncTaskCompleteListener<CustomResponseObject>{
+public class RegistrationActivity extends AbstractAsyncActivity{
 	private PopupWindow popupWindow;
 	private String username;
 	private String email;
@@ -109,7 +109,7 @@ public class RegistrationActivity extends AbstractAsyncActivity implements IAsyn
 		user.setPassword(password);
 		
 		RequestTask<UserAccountObject, TransferObject> signUp = new SignUpRequestTask(new IAsyncTaskCompleteListener<TransferObject>() {
-			
+			@Override
 			public void onTaskComplete(TransferObject response) {
 				dismissProgressDialog();
 				if (response.isSuccessful()) {
@@ -117,19 +117,9 @@ public class RegistrationActivity extends AbstractAsyncActivity implements IAsyn
 				}else{
 					displayResponse(response.getMessage());			
 				}
-				
 			}
 		}, user, new TransferObject());
 		signUp.execute();
-	}
-	
-	public void onTaskComplete(CustomResponseObject response) {
-		dismissProgressDialog();
-		if (response.isSuccessful()) {
-			buildDialog(getResources().getString(R.string.registration_successful));
-		}else{
-			displayResponse(response.getMessage());			
-		}
 	}
 	
 	private void buildDialog(String message) {

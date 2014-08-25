@@ -12,13 +12,12 @@ import android.widget.EditText;
 import android.widget.TextView;
 import ch.uzh.csg.mbps.client.util.BaseUriHandler;
 import ch.uzh.csg.mbps.client.util.Constants;
-import ch.uzh.csg.mbps.responseobject.CustomResponseObject;
 
 /**
  * The Login Activity is the first view of the application. The user has to sign
  * in with the username and password to use the application.
  */
-public class LoginActivity extends AbstractLoginActivity implements IAsyncTaskCompleteListener<CustomResponseObject>{
+public class LoginActivity extends AbstractLoginActivity{
 	// constant to determine which sub-activity returns
 	private static final int REQUEST_CODE = 1;
 	private Button signInBtn;
@@ -59,10 +58,6 @@ public class LoginActivity extends AbstractLoginActivity implements IAsyncTaskCo
 	public boolean onPrepareOptionsMenu(Menu menu) {
 		return false;
 	}
-    
-    public void onTaskComplete(CustomResponseObject response) {
-    	super.onTaskComplete(response, getApplicationContext());
-    }
     
 	private void retrieveLastSignedUsernameAndServerURL() {
 		SharedPreferences sharedPref = getSharedPreferences(Constants.STORED_STRINGS, Context.MODE_PRIVATE);

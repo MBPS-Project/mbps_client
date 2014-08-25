@@ -62,13 +62,11 @@ public abstract class AbstractLoginActivity extends AbstractAsyncActivity{
 	protected void launchSignInRequest(final Context context) {
 		showLoadingProgressDialog();
 		TimeHandler.getInstance().setStartActivity(this);
-		UserAccount user = new UserAccount(usernameUrl, null, password);
-		
 		RequestTask<TransferObject, TransferObject> signIn = new SignInRequestTask(new IAsyncTaskCompleteListener<TransferObject>() {
-			
+			@Override
 			public void onTaskComplete(TransferObject response) {
+				init();
 				if(response.isSuccessful()) {
-					init();
 					launchReadRequest(context);
 				} else {
 					launchOfflineMode(context);
@@ -179,25 +177,13 @@ public abstract class AbstractLoginActivity extends AbstractAsyncActivity{
 			}
 		}
 	}
-	
-	/*private void init() {
-		if (!clientControllerInitialized) {
-			try {
-				boolean init = ClientController.init(context, username, password);
-				clientControllerInitialized = init;
-			} catch (WrongPasswordException e) {
-				wrongPassword = true;
-				displayResponse(context.getResources().getString(R.string.invalid_password));
-				clientControllerInitialized = false;
-			}
-		}
-	}*/
 
 	/**
 	 * This method is called, when the server request fails. The user
 	 * informations are retrieved from the internal storage.
 	 */
 	protected void launchOfflineMode(Context context) {
+		dismissProgressDialog();
 		if (ClientController.getStorageHandler().getUserAccount() != null) {
 			launchMainActivity(context);
 		} else {
@@ -254,10 +240,13 @@ public abstract class AbstractLoginActivity extends AbstractAsyncActivity{
 	}
 
 	private void launchCommitKeyRequest(final Context context, CustomKeyPair ckp) {
+		showLoadingProgressDialog();
+
 		CustomPublicKey cpk = new CustomPublicKey(ckp.getKeyNumber(), ckp.getPkiAlgorithm(), ckp.getPublicKey());
 		CustomPublicKeyObject cpko = new CustomPublicKeyObject();
 		cpko.setCustomPublicKey(cpk);
-			RequestTask<CustomPublicKeyObject, TransferObject> task = new CommitPublicKeyRequestTask(new IAsyncTaskCompleteListener<TransferObject>() {
+		
+		RequestTask<CustomPublicKeyObject, TransferObject> task = new CommitPublicKeyRequestTask(new IAsyncTaskCompleteListener<TransferObject>() {
 			@Override
 			public void onTaskComplete(TransferObject response) {
 				String keyNr = response.getMessage();
@@ -266,13 +255,11 @@ public abstract class AbstractLoginActivity extends AbstractAsyncActivity{
 				CustomKeyPair ckp = new CustomKeyPair(customKeyPair.getPkiAlgorithm(), keyNumber, customKeyPair.getPublicKey(), customKeyPair.getPrivateKey());
 				boolean saved = ClientController.getStorageHandler().saveKeyPair(ckp);
 				if (!saved) {
-				displayResponse(context.getResources().getString(R.string.error_xmlSave_failed));
+					displayResponse(context.getResources().getString(R.string.error_xmlSave_failed));
 				}
-				
 				dismissProgressDialog();
 				ClientController.setOnlineMode(true);
 				launchMainActivity(context);
-
 			}
 		}, cpko, new CustomPublicKeyObject());
 		task.execute();
