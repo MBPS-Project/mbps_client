@@ -14,7 +14,7 @@ public class ClientController {
 	private static InternalStorageHandler internalStorageHandler;
 	
 	/**
-	 * Returns the {@link InternalStorageHandler}.
+	 * Returns the {@link  InternalStorageHandler}.
 	 */
 	public static InternalStorageHandler getStorageHandler() {
 		return internalStorageHandler;
