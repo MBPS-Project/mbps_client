@@ -18,17 +18,13 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
-import ch.uzh.csg.mbps.client.request.RequestTask;
-import ch.uzh.csg.mbps.client.request.ServerAccountRequestTask;
 import ch.uzh.csg.mbps.client.util.ClientController;
-import ch.uzh.csg.mbps.client.util.Constants;
 import ch.uzh.csg.mbps.client.util.ServerAccountsTransactionFormatter;
 import ch.uzh.csg.mbps.client.util.TimeHandler;
 import ch.uzh.csg.mbps.model.ServerAccount;
-import ch.uzh.csg.mbps.responseobject.CustomResponseObject;
 import ch.uzh.csg.mbps.responseobject.ServerAccountTransferObject;
 
-public class ServerRelationActivity extends AbstractAsyncActivity implements IAsyncTaskCompleteListener<CustomResponseObject> {
+public class ServerRelationActivity extends AbstractAsyncActivity {
 	private ServerAccountTransferObject sato;
 	private int urlResultsPerPage;
 	private int urlPage = 0;
@@ -144,30 +140,7 @@ public class ServerRelationActivity extends AbstractAsyncActivity implements IAs
 				linearLayout.removeAllViews();
 			
 			this.urlPage = urlPage;
-			
-			RequestTask getServerAccounts = new ServerAccountRequestTask(this, urlPage);
-			getServerAccounts.execute();
-		}
-	}
-	
-	public void onTaskComplete(CustomResponseObject response) {
-		dismissProgressDialog();
-		
-		if (response.isSuccessful()) {
-			//renew Session Timeout Countdown
-			if(ClientController.isOnline()){
-				startTimer(TimeHandler.getInstance().getRemainingTime(), 1000);
-			}
-			sato = response.getServerAccountTO();
-			if (sato != null) {
-				write();
-			}
-		} else {
-			sato = null;
-			if (response.getMessage().equals(Constants.REST_CLIENT_ERROR)) {
-				reload(getIntent());
-				invalidateOptionsMenu();
-			}
+
 		}
 	}
 	
