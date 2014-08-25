@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.util.Pair;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -21,6 +22,7 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 import ch.uzh.csg.mbps.client.request.RequestTask;
 import ch.uzh.csg.mbps.client.request.SignUpRequestTask;
+import ch.uzh.csg.mbps.client.util.BaseUriHandler;
 import ch.uzh.csg.mbps.client.util.CheckFormatHandler;
 import ch.uzh.csg.mbps.model.UserAccount;
 import ch.uzh.csg.mbps.responseobject.CustomResponseObject;
@@ -34,6 +36,7 @@ public class RegistrationActivity extends AbstractAsyncActivity implements IAsyn
 	private String email;
 	private String password;
 	private String confirmPassword;
+	private String serverUrl;
 	private CheckBox termOfUseChecked;
 	private Button createAccountBtn;
   	private TextView termOfUse;
@@ -66,7 +69,10 @@ public class RegistrationActivity extends AbstractAsyncActivity implements IAsyn
 	  	createAccountBtn.setOnClickListener(new View.OnClickListener() {
 	  		public void onClick(View v) {
 	  			initInputInformation();
-	  			Pair<Boolean, String> responseContent = CheckFormatHandler.checkRegistrationInputs(getApplicationContext(), username, email, password, confirmPassword, termOfUseChecked);
+	  			Log.i("TAG register", username + " "+ serverUrl);
+//	  			if(serverUrl.isEmpty())
+//	  				serverUrl = "";
+	  			Pair<Boolean, String> responseContent = CheckFormatHandler.checkRegistrationInputs(getApplicationContext(), username, email, password, confirmPassword, serverUrl, termOfUseChecked);
 				if (responseContent.first) {
 					launchCreateRequest();
 				} else {
@@ -88,18 +94,26 @@ public class RegistrationActivity extends AbstractAsyncActivity implements IAsyn
 		email = ((EditText) findViewById(R.id.signUpEditEmailText)).getText().toString();
 		password = ((EditText) findViewById(R.id.signUpEditPasswordText)).getText().toString();
 		confirmPassword = ((EditText) findViewById(R.id.signUpEditConfirmPasswordText)).getText().toString();
+		serverUrl = ((EditText) findViewById(R.id.signUpEditServerText)).getText().toString();
 		termOfUseChecked = (CheckBox)findViewById(R.id.signUpCheckBox);
 	}
 	
 	private void launchCreateRequest() {
 		showLoadingProgressDialog();
-		UserAccount user = new UserAccount(this.username, this.email, this.password);
+		if(serverUrl.isEmpty())
+			serverUrl = BaseUriHandler.getInstance().getBaseUriSSL();
+		else
+			BaseUriHandler.getInstance().setBaseUriSSL(serverUrl);
+		String usernameServerUrl = this.username +"@" + serverUrl;
+		Log.i("LOG register", usernameServerUrl);
+		UserAccount user = new UserAccount(usernameServerUrl, this.email, this.password);
 		RequestTask signUp = new SignUpRequestTask(this, user);
 		signUp.execute();
 	}
 	
 	public void onTaskComplete(CustomResponseObject response) {
 		dismissProgressDialog();
+		Log.i("LOG register", "response " + response.getMessage());
 		if (response.isSuccessful()) {
 			buildDialog(getResources().getString(R.string.registration_successful));
 		}else{
@@ -140,6 +154,8 @@ public class RegistrationActivity extends AbstractAsyncActivity implements IAsyn
 		Intent data = new Intent();
 		data.setClass(RegistrationActivity.this, LoginActivity.class);
 		data.putExtra("username", this.username);
+		if(!this.serverUrl.isEmpty())
+			data.putExtra("serverUrl", this.serverUrl);
 		setResult(RESULT_OK,data);
 		startActivity(data);
 		super.finish();
