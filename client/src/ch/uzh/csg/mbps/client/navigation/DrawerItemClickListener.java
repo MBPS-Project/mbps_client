@@ -16,6 +16,7 @@ import ch.uzh.csg.mbps.client.IAsyncTaskCompleteListener;
 import ch.uzh.csg.mbps.client.LoginActivity;
 import ch.uzh.csg.mbps.client.MainActivity;
 import ch.uzh.csg.mbps.client.R;
+import ch.uzh.csg.mbps.client.ServerRelationActivity;
 import ch.uzh.csg.mbps.client.payment.PayInActivity;
 import ch.uzh.csg.mbps.client.payment.PayOutActivity;
 import ch.uzh.csg.mbps.client.profile.AccountProfileActivity;
@@ -75,15 +76,19 @@ public class DrawerItemClickListener extends AbstractLoginActivity implements On
 			this.view.getContext().startActivity(new Intent(this.view.getContext().getApplicationContext(), AddressBookActivity.class));
 			break;
 		case 7:
+			// Relation to other server
+			this.view.getContext().startActivity(new Intent(this.view.getContext().getApplicationContext(), ServerRelationActivity.class));
+			break;
+		case 8:
 			// Reconnect to Server
 			launchSignInRequest();
 			break;
-		case 8:
+		case 9:
 			// Help
 			MainActivity.isFirstTime = true;
 			this.view.getContext().startActivity(new Intent(this.view.getContext().getApplicationContext(), MainActivity.class));
 			break;
-		case 9:
+		case 10:
 			// Sign Out
 			launchSignOut();
 			break;
