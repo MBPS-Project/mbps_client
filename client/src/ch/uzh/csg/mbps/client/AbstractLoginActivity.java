@@ -24,16 +24,19 @@ import ch.uzh.csg.mbps.customserialization.PKIAlgorithm;
 import ch.uzh.csg.mbps.keys.CustomKeyPair;
 import ch.uzh.csg.mbps.keys.CustomPublicKey;
 import ch.uzh.csg.mbps.model.UserAccount;
-import ch.uzh.csg.mbps.responseobject.CustomResponseObject;
-import ch.uzh.csg.mbps.responseobject.CustomResponseObject.Type;
+import ch.uzh.csg.mbps.responseobject.CustomPublicKeyObject;
+import ch.uzh.csg.mbps.responseobject.ReadRequestObject;
+import ch.uzh.csg.mbps.responseobject.TransferObject;
 
 /**
  * Abstract class with sign in request functionality. Takes care of logging in and saving
  * relevant information to local xml file.
  */
-public abstract class AbstractLoginActivity extends AbstractAsyncActivity implements IAsyncTaskCompleteListener<CustomResponseObject>{
+public abstract class AbstractLoginActivity extends AbstractAsyncActivity{
 	protected static String username;
 	protected static String password;
+	protected static String serverUrl;
+	protected static String usernameUrl;
 
 	private MenuItem menuWarning;
 	private MenuItem offlineMode;
@@ -51,27 +54,27 @@ public abstract class AbstractLoginActivity extends AbstractAsyncActivity implem
 	}
 
 	/**
-	 * Launch Sign in request to connect to server and launch session.
-	 */
-	protected void launchSignInRequest() {
-		showLoadingProgressDialog();
-		TimeHandler.getInstance().setStartActivity(this);
-		UserAccount user = new UserAccount(username, null, password);
-		RequestTask signIn = new SignInRequestTask(this, user);
-		signIn.execute();
-	}
-
-	/**
 	 * Launches Sign In Request with Context as parameter. Used for Reconnecting
 	 * to Server from Navigation Drawer.
 	 * 
 	 * @param Appliation Context
 	 */
-	protected void launchSignInRequest(Context context) {
+	protected void launchSignInRequest(final Context context) {
 		showLoadingProgressDialog();
-		TimeHandler.getInstance().setStartActivity(context);
-		UserAccount user = new UserAccount(username, null, password);
-		RequestTask signIn = new SignInRequestTask(this, user);
+		TimeHandler.getInstance().setStartActivity(this);
+		UserAccount user = new UserAccount(usernameUrl, null, password);
+		
+		RequestTask<TransferObject, TransferObject> signIn = new SignInRequestTask(new IAsyncTaskCompleteListener<TransferObject>() {
+			
+			public void onTaskComplete(TransferObject response) {
+				if(response.isSuccessful()) {
+					init();
+					launchReadRequest(context);
+				} else {
+					launchOfflineMode(context);
+				}
+			}
+		}, usernameUrl, password);
 		signIn.execute();
 	}
 
@@ -84,7 +87,7 @@ public abstract class AbstractLoginActivity extends AbstractAsyncActivity implem
 
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
-		initializeMenuItems(menu);
+		initializeMenuItems(menu, getApplicationContext());
 		invalidateOptionsMenu();
 		return true;
 	}
@@ -95,7 +98,7 @@ public abstract class AbstractLoginActivity extends AbstractAsyncActivity implem
 	 * 
 	 * @param menu
 	 */
-	protected void initializeMenuItems(Menu menu){
+	protected void initializeMenuItems(Menu menu, final Context context){
 		menuWarning = menu.findItem(R.id.action_warning);
 		offlineMode = menu.findItem(R.id.menu_offlineMode);
 		TextView offlineModeTV = (TextView) offlineMode.getActionView();
@@ -103,7 +106,7 @@ public abstract class AbstractLoginActivity extends AbstractAsyncActivity implem
 
 		menuWarning.setOnMenuItemClickListener(new OnMenuItemClickListener() {
 			public boolean onMenuItemClick(MenuItem item) {
-				launchSignInRequest();
+				launchSignInRequest(context);
 				return false;
 			}
 		});
@@ -114,7 +117,7 @@ public abstract class AbstractLoginActivity extends AbstractAsyncActivity implem
 		sessionRefreshMenuItem = menu.findItem(R.id.menu_refresh_session);
 		sessionRefreshMenuItem.setOnMenuItemClickListener(new OnMenuItemClickListener() {
 			public boolean onMenuItemClick(MenuItem item) {
-				launchSignInRequest();
+				launchSignInRequest(context);
 				return false;
 			}
 		});
@@ -163,16 +166,21 @@ public abstract class AbstractLoginActivity extends AbstractAsyncActivity implem
 
 		timer.start();
 	}
-
-	/**
-	 * Handles response from http server call. Differentiates the server call
-	 * based on given Type.
-	 * 
-	 * @param response from server
-	 * @param context (application context)
-	 */
-	public void onTaskComplete(CustomResponseObject response, Context context) {
-		boolean wrongPassword = false;
+	
+	public void init() {
+		Context context = getApplicationContext();
+		if (!clientControllerInitialized) {
+			try {
+				boolean init = ClientController.init(context, username, password);
+				clientControllerInitialized = init;
+			} catch (WrongPasswordException e) {
+				displayResponse(context.getResources().getString(R.string.invalid_password));
+				clientControllerInitialized = false;
+			}
+		}
+	}
+	
+	/*private void init() {
 		if (!clientControllerInitialized) {
 			try {
 				boolean init = ClientController.init(context, username, password);
@@ -183,72 +191,7 @@ public abstract class AbstractLoginActivity extends AbstractAsyncActivity implem
 				clientControllerInitialized = false;
 			}
 		}
-
-		if (response.isSuccessful()) {
-			if (response.getType() == Type.LOGIN) {
-				launchReadRequest();
-			} else if (response.getType() == Type.AFTER_LOGIN) {
-				dismissProgressDialog();
-				if (response.getClientVersion() != Constants.CLIENT_VERSION) {
-					showDialog(context.getResources().getString(R.string.invalid_client_version_title), R.drawable.ic_alerts_and_states_warning, context.getResources().getString(R.string.invalid_client_version));
-					return;
-				}
-
-				boolean saved = ClientController.getStorageHandler().saveServerPublicKey(response.getServerPublicKey());
-				if (!saved) {
-					displayResponse(context.getResources().getString(R.string.error_xmlSave_failed));
-				}
-				saved = ClientController.getStorageHandler().saveUserAccount(response.getReadAccountTO().getUserAccount());
-				if (!saved) {
-					displayResponse(context.getResources().getString(R.string.error_xmlSave_failed));
-				}
-
-				CustomKeyPair ckp = ClientController.getStorageHandler().getKeyPair();
-				if (ckp == null) {
-					try {
-						KeyPair keyPair = KeyHandler.generateKeyPair();
-						ckp = new CustomKeyPair(PKIAlgorithm.DEFAULT.getCode(), (byte) 0, KeyHandler.encodePublicKey(keyPair.getPublic()), KeyHandler.encodePrivateKey(keyPair.getPrivate()));
-						customKeyPair = ckp;
-
-						launchCommitKeyRequest(ckp);
-						return;
-					} catch (Exception e) {
-						displayResponse(context.getResources().getString(R.string.error_xmlSave_failed));
-					}
-				} else if (response.getMessage() == null) {
-					customKeyPair = ckp;
-					launchCommitKeyRequest(ckp);
-					return;
-				}
-				ClientController.setOnlineMode(true);
-				launchMainActivity(context);
-			} else if (response.getType() == Type.SAVE_PUBLIC_KEY) {
-				String keyNr = response.getMessage();
-				byte keyNumber = Byte.parseByte(keyNr);
-
-				CustomKeyPair ckp = new CustomKeyPair(customKeyPair.getPkiAlgorithm(), keyNumber, customKeyPair.getPublicKey(), customKeyPair.getPrivateKey());
-				boolean saved = ClientController.getStorageHandler().saveKeyPair(ckp);
-				if (!saved) {
-					displayResponse(context.getResources().getString(R.string.error_xmlSave_failed));
-				}
-
-				dismissProgressDialog();
-				ClientController.setOnlineMode(true);
-				launchMainActivity(context);
-			}
-		} else if (response.getMessage().equals(Constants.REST_CLIENT_ERROR) || response.getMessage().equals(Constants.CONNECTION_ERROR) ) {
-			dismissProgressDialog();
-			displayResponse(getResources().getString(R.string.no_connection_server));
-			launchOfflineMode(context);
-		} else if (response.getMessage().equals("UNAUTHORIZED")) {
-			dismissProgressDialog();
-			if (!wrongPassword)
-				displayResponse(getResources().getString(R.string.error_login));
-		} else {
-			dismissProgressDialog();
-			displayResponse(response.getMessage());
-		}
-	}
+	}*/
 
 	/**
 	 * This method is called, when the server request fails. The user
@@ -262,18 +205,81 @@ public abstract class AbstractLoginActivity extends AbstractAsyncActivity implem
 		}
 	}
 
-	private void launchReadRequest() {		
-		RequestTask read = new ReadRequestTask(this);
+	private void launchReadRequest(final Context context) {		
+		RequestTask<TransferObject, ReadRequestObject> read = new ReadRequestTask(new IAsyncTaskCompleteListener<ReadRequestObject>() {
+			
+			public void onTaskComplete(ReadRequestObject response) {
+				dismissProgressDialog();
+			
+				if (!response.isSuccessful()) {
+					displayResponse(response.getMessage());
+					return;
+				}
+				
+				if (response.getVersion() != Constants.CLIENT_VERSION) {
+					showDialog(context.getResources().getString(R.string.invalid_client_version_title), R.drawable.ic_alerts_and_states_warning, context.getResources().getString(R.string.invalid_client_version));
+					return;
+				}
+				
+				boolean saved = ClientController.getStorageHandler().saveServerPublicKey(response.getCustomPublicKey().getCustomPublicKey());
+				if (!saved) {
+					displayResponse(context.getResources().getString(R.string.error_xmlSave_failed));
+				}
+				saved = ClientController.getStorageHandler().saveUserAccount(response.getUserAccount());
+				if (!saved) {
+					displayResponse(context.getResources().getString(R.string.error_xmlSave_failed));
+				}
+			
+				CustomKeyPair ckp = ClientController.getStorageHandler().getKeyPair();
+				if (ckp == null) {
+					try {
+						KeyPair keyPair = KeyHandler.generateKeyPair();
+						ckp = new CustomKeyPair(PKIAlgorithm.DEFAULT.getCode(), (byte) 0, KeyHandler.encodePublicKey(keyPair.getPublic()), KeyHandler.encodePrivateKey(keyPair.getPrivate()));
+						customKeyPair = ckp;
+						launchCommitKeyRequest(context, ckp);
+						return;
+					} catch (Exception e) {
+						displayResponse(context.getResources().getString(R.string.error_xmlSave_failed));
+					}
+				} else if (response.getMessage() == null) {
+					customKeyPair = ckp;
+					launchCommitKeyRequest(context, ckp);
+					return;
+				}
+				ClientController.setOnlineMode(true);
+				launchMainActivity(context);
+			}
+		}, new TransferObject(), new ReadRequestObject());
 		read.execute();
 	}
 
-	private void launchCommitKeyRequest(CustomKeyPair ckp) {
+	private void launchCommitKeyRequest(final Context context, CustomKeyPair ckp) {
 		CustomPublicKey cpk = new CustomPublicKey(ckp.getKeyNumber(), ckp.getPkiAlgorithm(), ckp.getPublicKey());
-		new CommitPublicKeyRequestTask(this, cpk).execute();
+		CustomPublicKeyObject cpko = new CustomPublicKeyObject();
+		cpko.setCustomPublicKey(cpk);
+			RequestTask<CustomPublicKeyObject, TransferObject> task = new CommitPublicKeyRequestTask(new IAsyncTaskCompleteListener<TransferObject>() {
+			@Override
+			public void onTaskComplete(TransferObject response) {
+				String keyNr = response.getMessage();
+				byte keyNumber = Byte.parseByte(keyNr);
+				
+				CustomKeyPair ckp = new CustomKeyPair(customKeyPair.getPkiAlgorithm(), keyNumber, customKeyPair.getPublicKey(), customKeyPair.getPrivateKey());
+				boolean saved = ClientController.getStorageHandler().saveKeyPair(ckp);
+				if (!saved) {
+				displayResponse(context.getResources().getString(R.string.error_xmlSave_failed));
+				}
+				
+				dismissProgressDialog();
+				ClientController.setOnlineMode(true);
+				launchMainActivity(context);
+
+			}
+		}, cpko, new CustomPublicKeyObject());
+		task.execute();
 	}
 
 	private void launchMainActivity(Context context){
-		storeUsernameIntoSharedPref(context);
+		storeUsernameAndServerURLIntoSharedPref(context);
 		Intent intent = new Intent(context.getApplicationContext(), MainActivity.class);
 		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
 		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -282,12 +288,13 @@ public abstract class AbstractLoginActivity extends AbstractAsyncActivity implem
 	}
 
 	/**
-	 * Stores the username of the authenticated user.
+	 * Stores the username and server url of the authenticated user.
 	 */
-	private void storeUsernameIntoSharedPref(Context context) {
-		SharedPreferences sharedPref = context.getSharedPreferences(context.getResources().getString(R.string.stored_username), Context.MODE_PRIVATE);
-		SharedPreferences.Editor editor = sharedPref.edit();
-		editor.putString(context.getResources().getString(R.string.stored_username), username);
+	private void storeUsernameAndServerURLIntoSharedPref(Context context) {
+		SharedPreferences sharedPrefUser = context.getSharedPreferences(Constants.STORED_STRINGS, Context.MODE_PRIVATE);
+		SharedPreferences.Editor editor = sharedPrefUser.edit();
+		editor.putString(Constants.STORED_USERNAME, username);
+		editor.putString(Constants.STORED_URL, serverUrl);
 		editor.commit();
 	}
 
