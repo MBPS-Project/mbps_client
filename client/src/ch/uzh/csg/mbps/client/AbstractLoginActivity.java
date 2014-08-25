@@ -34,6 +34,8 @@ import ch.uzh.csg.mbps.responseobject.CustomResponseObject.Type;
 public abstract class AbstractLoginActivity extends AbstractAsyncActivity implements IAsyncTaskCompleteListener<CustomResponseObject>{
 	protected static String username;
 	protected static String password;
+	protected static String serverUrl;
+	protected static String usernameUrl;
 
 	private MenuItem menuWarning;
 	private MenuItem offlineMode;
@@ -56,7 +58,7 @@ public abstract class AbstractLoginActivity extends AbstractAsyncActivity implem
 	protected void launchSignInRequest() {
 		showLoadingProgressDialog();
 		TimeHandler.getInstance().setStartActivity(this);
-		UserAccount user = new UserAccount(username, null, password);
+		UserAccount user = new UserAccount(usernameUrl, null, password);
 		RequestTask signIn = new SignInRequestTask(this, user);
 		signIn.execute();
 	}
@@ -70,7 +72,7 @@ public abstract class AbstractLoginActivity extends AbstractAsyncActivity implem
 	protected void launchSignInRequest(Context context) {
 		showLoadingProgressDialog();
 		TimeHandler.getInstance().setStartActivity(context);
-		UserAccount user = new UserAccount(username, null, password);
+		UserAccount user = new UserAccount(usernameUrl, null, password);
 		RequestTask signIn = new SignInRequestTask(this, user);
 		signIn.execute();
 	}
@@ -175,7 +177,7 @@ public abstract class AbstractLoginActivity extends AbstractAsyncActivity implem
 		boolean wrongPassword = false;
 		if (!clientControllerInitialized) {
 			try {
-				boolean init = ClientController.init(context, username, password);
+				boolean init = ClientController.init(context, usernameUrl, password);
 				clientControllerInitialized = init;
 			} catch (WrongPasswordException e) {
 				wrongPassword = true;
@@ -215,10 +217,6 @@ public abstract class AbstractLoginActivity extends AbstractAsyncActivity implem
 					} catch (Exception e) {
 						displayResponse(context.getResources().getString(R.string.error_xmlSave_failed));
 					}
-				} else if (response.getMessage() == null) {
-					customKeyPair = ckp;
-					launchCommitKeyRequest(ckp);
-					return;
 				}
 				ClientController.setOnlineMode(true);
 				launchMainActivity(context);
@@ -273,7 +271,7 @@ public abstract class AbstractLoginActivity extends AbstractAsyncActivity implem
 	}
 
 	private void launchMainActivity(Context context){
-		storeUsernameIntoSharedPref(context);
+		storeUsernameAndServerURLIntoSharedPref(context);
 		Intent intent = new Intent(context.getApplicationContext(), MainActivity.class);
 		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
 		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -282,12 +280,13 @@ public abstract class AbstractLoginActivity extends AbstractAsyncActivity implem
 	}
 
 	/**
-	 * Stores the username of the authenticated user.
+	 * Stores the username and server url of the authenticated user.
 	 */
-	private void storeUsernameIntoSharedPref(Context context) {
-		SharedPreferences sharedPref = context.getSharedPreferences(context.getResources().getString(R.string.stored_username), Context.MODE_PRIVATE);
-		SharedPreferences.Editor editor = sharedPref.edit();
-		editor.putString(context.getResources().getString(R.string.stored_username), username);
+	private void storeUsernameAndServerURLIntoSharedPref(Context context) {
+		SharedPreferences sharedPrefUser = context.getSharedPreferences(Constants.STORED_STRINGS, Context.MODE_PRIVATE);
+		SharedPreferences.Editor editor = sharedPrefUser.edit();
+		editor.putString(Constants.STORED_USERNAME, username);
+		editor.putString(Constants.STORED_URL, serverUrl);
 		editor.commit();
 	}
 
