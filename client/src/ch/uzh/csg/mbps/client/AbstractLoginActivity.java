@@ -23,7 +23,6 @@ import ch.uzh.csg.mbps.client.util.TimeHandler;
 import ch.uzh.csg.mbps.customserialization.PKIAlgorithm;
 import ch.uzh.csg.mbps.keys.CustomKeyPair;
 import ch.uzh.csg.mbps.keys.CustomPublicKey;
-import ch.uzh.csg.mbps.model.UserAccount;
 import ch.uzh.csg.mbps.responseobject.CustomPublicKeyObject;
 import ch.uzh.csg.mbps.responseobject.ReadRequestObject;
 import ch.uzh.csg.mbps.responseobject.TransferObject;
