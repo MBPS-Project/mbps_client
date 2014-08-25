@@ -18,8 +18,9 @@ public class CheckFormatHandler {
 
 	private static boolean fieldsNotEmpty(ArrayList<String> fields){
 		for (String field : fields) {
-			if (field.isEmpty())
+			if (field.isEmpty()){
 				return false;
+			}
 		}
 		return true;
 	}
@@ -33,8 +34,8 @@ public class CheckFormatHandler {
 		return (password.length() >= 4 && password.length() <= 20) ? true : false;
 	}
 	
-	private static boolean passwordsAreEqual(CharSequence email, CharSequence confirm){
-		return email.equals(confirm);
+	private static boolean passwordsAreEqual(CharSequence password, CharSequence confirm){
+		return password.equals(confirm);
 	}
 	
 	private static boolean isTermOfUseAccepted(CheckBox accept){
@@ -56,13 +57,13 @@ public class CheckFormatHandler {
 	 *            The checkbox of the term of use.
 	 * @return Returns true if all requirements are met.
 	 */
-	public static Pair<Boolean,String> checkRegistrationInputs(Context context, String username, String email, String password, String confirmPassword, CheckBox termOfUseChecked){
+	public static Pair<Boolean,String> checkRegistrationInputs(Context context, String username, String email, String password, String confirmPassword, String serverUrl, CheckBox termOfUseChecked){
 		ArrayList<String> editTexts = new ArrayList<String>();
 		editTexts.add(username);
 		editTexts.add(email);
 		editTexts.add(password);
 		editTexts.add(confirmPassword);
-
+		
 		// Checks if any field is empty
 		if (!fieldsNotEmpty(editTexts)) {
 			return new Pair<Boolean, String>(false, context.getResources().getString(R.string.registration_field_not_empty));
@@ -86,9 +87,14 @@ public class CheckFormatHandler {
 		// Checks if term of use is accepted
 		else if (!isTermOfUseAccepted(termOfUseChecked)) {
 			return new Pair<Boolean, String>(false, context.getResources().getString(R.string.registration_tou_not_accepted));
+		}
+		// Checks if server url is inserted and has corrected format
+		else if(!serverUrl.isEmpty() && isUrlNotValid(serverUrl)){
+			return new Pair<Boolean, String>(false, context.getResources().getString(R.string.registration_uri_error));
 		} else {
 			return new Pair<Boolean, String>(true, "OK");
 		}
+		
 	}
 
 	/**
@@ -130,5 +136,18 @@ public class CheckFormatHandler {
 	public static boolean isEmailValid(String email){
 		return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
 	}
+	
+	/**
+	 * Checks if the url has a valid form.
+	 * 
+	 * @param url
+	 *            The inserted url string.
+	 * @return Returns true if format is valid.
+	 */
+	public static boolean isUrlNotValid(String url){
+		Matcher matcher = Pattern.compile(Constants.EXCLUDED_URI_PATTERN).matcher(url);
+		return  matcher.matches();
+	}
+
 
 }
