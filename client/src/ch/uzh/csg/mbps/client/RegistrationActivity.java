@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.util.Pair;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -30,7 +29,7 @@ import ch.uzh.csg.mbps.responseobject.UserAccountObject;
 /**
  * This class is the view where a user can create an account.
  */
-public class RegistrationActivity extends AbstractAsyncActivity {
+public class RegistrationActivity extends AbstractAsyncActivity implements IAsyncTaskCompleteListener<CustomResponseObject>{
 	private PopupWindow popupWindow;
 	private String username;
 	private String email;
@@ -69,7 +68,6 @@ public class RegistrationActivity extends AbstractAsyncActivity {
 	  	createAccountBtn.setOnClickListener(new View.OnClickListener() {
 	  		public void onClick(View v) {
 	  			initInputInformation();
-	  			Log.i("TAG register", username + " "+ serverUrl);
 //	  			if(serverUrl.isEmpty())
 //	  				serverUrl = "";
 	  			Pair<Boolean, String> responseContent = CheckFormatHandler.checkRegistrationInputs(getApplicationContext(), username, email, password, confirmPassword, serverUrl, termOfUseChecked);
@@ -100,18 +98,13 @@ public class RegistrationActivity extends AbstractAsyncActivity {
 	
 	private void launchCreateRequest() {
 		showLoadingProgressDialog();
-<<<<<<< HEAD
 		if(serverUrl.isEmpty())
 			serverUrl = BaseUriHandler.getInstance().getBaseUriSSL();
 		else
 			BaseUriHandler.getInstance().setBaseUriSSL(serverUrl);
 		String usernameServerUrl = this.username +"@" + serverUrl;
-		Log.i("LOG register", usernameServerUrl);
-		UserAccount user = new UserAccount(usernameServerUrl, this.email, this.password);
-		RequestTask signUp = new SignUpRequestTask(this, user);
-=======
 		UserAccountObject user = new UserAccountObject();
-		user.setUsername(username);
+		user.setUsername(usernameServerUrl);
 		user.setEmail(email);
 		user.setPassword(password);
 		
@@ -127,21 +120,16 @@ public class RegistrationActivity extends AbstractAsyncActivity {
 				
 			}
 		}, user, new TransferObject());
->>>>>>> refs/heads/master
 		signUp.execute();
-<<<<<<< HEAD
 	}
 	
 	public void onTaskComplete(CustomResponseObject response) {
 		dismissProgressDialog();
-		Log.i("LOG register", "response " + response.getMessage());
 		if (response.isSuccessful()) {
 			buildDialog(getResources().getString(R.string.registration_successful));
 		}else{
 			displayResponse(response.getMessage());			
 		}
-=======
->>>>>>> refs/heads/master
 	}
 	
 	private void buildDialog(String message) {

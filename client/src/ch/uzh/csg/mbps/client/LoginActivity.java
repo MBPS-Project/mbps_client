@@ -4,25 +4,21 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-<<<<<<< HEAD
 import ch.uzh.csg.mbps.client.util.BaseUriHandler;
 import ch.uzh.csg.mbps.client.util.Constants;
 import ch.uzh.csg.mbps.responseobject.CustomResponseObject;
-=======
->>>>>>> refs/heads/master
 
 /**
  * The Login Activity is the first view of the application. The user has to sign
  * in with the username and password to use the application.
  */
-public class LoginActivity extends AbstractLoginActivity {
+public class LoginActivity extends AbstractLoginActivity implements IAsyncTaskCompleteListener<CustomResponseObject>{
 	// constant to determine which sub-activity returns
 	private static final int REQUEST_CODE = 1;
 	private Button signInBtn;
@@ -64,7 +60,6 @@ public class LoginActivity extends AbstractLoginActivity {
 		return false;
 	}
     
-<<<<<<< HEAD
     public void onTaskComplete(CustomResponseObject response) {
     	super.onTaskComplete(response, getApplicationContext());
     }
@@ -72,13 +67,7 @@ public class LoginActivity extends AbstractLoginActivity {
 	private void retrieveLastSignedUsernameAndServerURL() {
 		SharedPreferences sharedPref = getSharedPreferences(Constants.STORED_STRINGS, Context.MODE_PRIVATE);
 		String storedUsername = sharedPref.getString(Constants.STORED_USERNAME, "");
-=======
-	private void retrieveLastSignedUsername() {
-		SharedPreferences sharedPref = getSharedPreferences(getResources().getString(R.string.stored_username), Context.MODE_PRIVATE);
-		String storedUsername = sharedPref.getString(getString(R.string.stored_username), "");
->>>>>>> refs/heads/master
 		EditText usernameEditText = (EditText) findViewById(R.id.loginUsernameEditText);
-		Log.i("TAG", storedUsername);
 		usernameEditText.setText(storedUsername);
 		if (!storedUsername.isEmpty()) {
 			username = storedUsername;
@@ -88,7 +77,6 @@ public class LoginActivity extends AbstractLoginActivity {
 		
 		String storedUrl = sharedPref.getString(Constants.STORED_URL, "");
 		EditText urlEditText = (EditText) findViewById(R.id.loginServerEditText);
-		Log.i("TAG", storedUrl);
 		urlEditText.setText(storedUrl);
 		if (!storedUrl.isEmpty()) {
 			serverUrl = storedUrl;
