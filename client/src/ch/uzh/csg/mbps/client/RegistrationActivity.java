@@ -24,13 +24,13 @@ import ch.uzh.csg.mbps.client.request.RequestTask;
 import ch.uzh.csg.mbps.client.request.SignUpRequestTask;
 import ch.uzh.csg.mbps.client.util.BaseUriHandler;
 import ch.uzh.csg.mbps.client.util.CheckFormatHandler;
-import ch.uzh.csg.mbps.model.UserAccount;
-import ch.uzh.csg.mbps.responseobject.CustomResponseObject;
+import ch.uzh.csg.mbps.responseobject.TransferObject;
+import ch.uzh.csg.mbps.responseobject.UserAccountObject;
 
 /**
  * This class is the view where a user can create an account.
  */
-public class RegistrationActivity extends AbstractAsyncActivity implements IAsyncTaskCompleteListener<CustomResponseObject>{
+public class RegistrationActivity extends AbstractAsyncActivity {
 	private PopupWindow popupWindow;
 	private String username;
 	private String email;
@@ -100,6 +100,7 @@ public class RegistrationActivity extends AbstractAsyncActivity implements IAsyn
 	
 	private void launchCreateRequest() {
 		showLoadingProgressDialog();
+<<<<<<< HEAD
 		if(serverUrl.isEmpty())
 			serverUrl = BaseUriHandler.getInstance().getBaseUriSSL();
 		else
@@ -108,7 +109,27 @@ public class RegistrationActivity extends AbstractAsyncActivity implements IAsyn
 		Log.i("LOG register", usernameServerUrl);
 		UserAccount user = new UserAccount(usernameServerUrl, this.email, this.password);
 		RequestTask signUp = new SignUpRequestTask(this, user);
+=======
+		UserAccountObject user = new UserAccountObject();
+		user.setUsername(username);
+		user.setEmail(email);
+		user.setPassword(password);
+		
+		RequestTask<UserAccountObject, TransferObject> signUp = new SignUpRequestTask(new IAsyncTaskCompleteListener<TransferObject>() {
+			
+			public void onTaskComplete(TransferObject response) {
+				dismissProgressDialog();
+				if (response.isSuccessful()) {
+					buildDialog(getResources().getString(R.string.registration_successful));
+				}else{
+					displayResponse(response.getMessage());			
+				}
+				
+			}
+		}, user, new TransferObject());
+>>>>>>> refs/heads/master
 		signUp.execute();
+<<<<<<< HEAD
 	}
 	
 	public void onTaskComplete(CustomResponseObject response) {
@@ -119,6 +140,8 @@ public class RegistrationActivity extends AbstractAsyncActivity implements IAsyn
 		}else{
 			displayResponse(response.getMessage());			
 		}
+=======
+>>>>>>> refs/heads/master
 	}
 	
 	private void buildDialog(String message) {
