@@ -140,8 +140,7 @@ public class CheckFormatHandler {
 	/**
 	 * Checks if the url has a valid form.
 	 * 
-	 * @param url
-	 *            The inserted url string.
+	 * @param url The inserted url string.
 	 * @return Returns true if format is valid.
 	 */
 	public static boolean isUrlValid(String url){
