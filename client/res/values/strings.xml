@@ -55,7 +55,7 @@
     <string name="registration_password_lenght_error">Password has an invalid form! Please insert a password with a length of 4 until 20 characters.</string>
     <string name="registration_username_error">Username has an invalid form!\nOnly letters and numbers with a minimum length of 4 charcters are excepted.</string>
     <string name="registration_tou_not_accepted">Please read and accept the term of use.</string>
-    <string name="registration_uri_error">URL has an invalid form!</string>
+    <string name="registration_uri_error">URL has an invalid form! The url has to start with "http(s)://".</string>
     <string name="registration_password_not_equal">The entered passwords do not match, please try again.</string>
     <string name="registration_successful">Please check your emails to verify your account. Your Account has successfully been created. Without verification you can not login.</string>
 

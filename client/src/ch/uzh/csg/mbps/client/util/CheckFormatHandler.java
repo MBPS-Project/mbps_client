@@ -89,7 +89,7 @@ public class CheckFormatHandler {
 			return new Pair<Boolean, String>(false, context.getResources().getString(R.string.registration_tou_not_accepted));
 		}
 		// Checks if server url is inserted and has corrected format
-		else if(!serverUrl.isEmpty() && isUrlNotValid(serverUrl)){
+		else if(!serverUrl.isEmpty() && !isUrlValid(serverUrl)){
 			return new Pair<Boolean, String>(false, context.getResources().getString(R.string.registration_uri_error));
 		} else {
 			return new Pair<Boolean, String>(true, "OK");
@@ -144,8 +144,8 @@ public class CheckFormatHandler {
 	 *            The inserted url string.
 	 * @return Returns true if format is valid.
 	 */
-	public static boolean isUrlNotValid(String url){
-		Matcher matcher = Pattern.compile(Constants.EXCLUDED_URI_PATTERN).matcher(url);
+	public static boolean isUrlValid(String url){
+		Matcher matcher = Pattern.compile(Constants.URL_PATTERN).matcher(url);
 		return  matcher.matches();
 	}
 
