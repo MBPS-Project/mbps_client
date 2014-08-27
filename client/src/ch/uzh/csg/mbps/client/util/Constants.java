@@ -52,7 +52,7 @@ public class Constants {
 	
 	public static final String USERNAME_PATTERN = "^[A-Za-z0-9_-]{3,25}$";
 //	public static final String EXCLUDED_URI_PATTERN = "[<>@%'\"/;`\\$]";
-	public static final String URL_PATTERN = "/^(http?(s):\\/\\/)?([\\da-z\\.-]+)\\.([a-z\\.]{2,6})([\\/\\w \\.-]*)*\\/?$";
+	public static final String URL_PATTERN = "^(http(s)?://)[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]$";
 	public static final String TIME_SESSION_EXPIRED = "Time is expired";
 	public static final String NO_COOKIE_STORED = "No Cookie stored!";
 	
