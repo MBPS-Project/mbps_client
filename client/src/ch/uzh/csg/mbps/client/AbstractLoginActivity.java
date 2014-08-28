@@ -248,7 +248,7 @@ public abstract class AbstractLoginActivity extends AbstractAsyncActivity{
 		CustomPublicKey cpk = new CustomPublicKey(ckp.getKeyNumber(), ckp.getPkiAlgorithm(), ckp.getPublicKey());
 		CustomPublicKeyObject cpko = new CustomPublicKeyObject();
 		cpko.setCustomPublicKey(cpk);
-		
+		//
 		RequestTask<CustomPublicKeyObject, TransferObject> task = new CommitPublicKeyRequestTask(new IAsyncTaskCompleteListener<TransferObject>() {
 			@Override
 			public void onTaskComplete(TransferObject response) {
