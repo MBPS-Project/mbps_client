@@ -21,6 +21,7 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 import ch.uzh.csg.mbps.client.request.RequestTask;
 import ch.uzh.csg.mbps.client.request.SignUpRequestTask;
+import ch.uzh.csg.mbps.client.util.BaseUriHandler;
 import ch.uzh.csg.mbps.client.util.CheckFormatHandler;
 import ch.uzh.csg.mbps.client.util.Constants;
 import ch.uzh.csg.mbps.responseobject.TransferObject;
@@ -29,12 +30,13 @@ import ch.uzh.csg.mbps.responseobject.UserAccountObject;
 /**
  * This class is the view where a user can create an account.
  */
-public class RegistrationActivity extends AbstractAsyncActivity {
+public class RegistrationActivity extends AbstractAsyncActivity{
 	private PopupWindow popupWindow;
 	private String username;
 	private String email;
 	private String password;
 	private String confirmPassword;
+	private String serverUrl;
 	private CheckBox termOfUseChecked;
 	private Button createAccountBtn;
   	private TextView termOfUse;
@@ -67,7 +69,9 @@ public class RegistrationActivity extends AbstractAsyncActivity {
 	  	createAccountBtn.setOnClickListener(new View.OnClickListener() {
 	  		public void onClick(View v) {
 	  			initInputInformation();
-	  			Pair<Boolean, String> responseContent = CheckFormatHandler.checkRegistrationInputs(getApplicationContext(), username, email, password, confirmPassword, termOfUseChecked);
+//	  			if(serverUrl.isEmpty())
+//	  				serverUrl = "";
+	  			Pair<Boolean, String> responseContent = CheckFormatHandler.checkRegistrationInputs(getApplicationContext(), username, email, password, confirmPassword, serverUrl, termOfUseChecked);
 				if (responseContent.first) {
 					launchCreateRequest();
 				} else {
@@ -89,13 +93,19 @@ public class RegistrationActivity extends AbstractAsyncActivity {
 		email = ((EditText) findViewById(R.id.signUpEditEmailText)).getText().toString();
 		password = ((EditText) findViewById(R.id.signUpEditPasswordText)).getText().toString();
 		confirmPassword = ((EditText) findViewById(R.id.signUpEditConfirmPasswordText)).getText().toString();
+		serverUrl = ((EditText) findViewById(R.id.signUpEditServerText)).getText().toString();
 		termOfUseChecked = (CheckBox)findViewById(R.id.signUpCheckBox);
 	}
 	
 	private void launchCreateRequest() {
 		showLoadingProgressDialog();
+		if(serverUrl.isEmpty())
+			serverUrl = BaseUriHandler.getInstance().getBaseUriSSL();
+		else
+			BaseUriHandler.getInstance().setBaseUriSSL(serverUrl);
+		String usernameServerUrl = this.username +"@" + serverUrl;
 		UserAccountObject user = new UserAccountObject();
-		user.setUsername(username);
+		user.setUsername(usernameServerUrl);
 		user.setEmail(email);
 		user.setPassword(password);
 		
@@ -148,6 +158,8 @@ public class RegistrationActivity extends AbstractAsyncActivity {
 		Intent data = new Intent();
 		data.setClass(RegistrationActivity.this, LoginActivity.class);
 		data.putExtra("username", this.username);
+		if(!this.serverUrl.isEmpty())
+			data.putExtra("serverUrl", this.serverUrl);
 		setResult(RESULT_OK,data);
 		startActivity(data);
 		super.finish();

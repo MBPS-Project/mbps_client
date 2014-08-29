@@ -41,22 +41,26 @@
         android:hint="@string/signUpEditConfirmPasswordText"
         android:inputType="textPassword" />
 
+    <EditText
+        android:id="@+id/signUpEditServerText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="8"
+        android:hint="@string/signUpEditServerText"
+        android:inputType="textUri" />
+    
     <TextView
         android:id="@+id/signUpTermOfUseTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        android:layout_marginBottom="15dp"
         android:text="@string/signUpTermOfUseTextView"
-        android:textColor="#1e5db2"
-        android:textSize="@dimen/textSize"/>
+        android:textColor="#1e5db2" />
 
     <CheckBox
         android:id="@+id/signUpCheckBox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/signUpCheckBox"
-        android:layout_marginBottom="10dp" />
+        android:text="@string/signUpCheckBox" />
 
     <Button
         android:id="@+id/signUpAgreeBtn"
