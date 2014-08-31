@@ -7,6 +7,7 @@ import java.util.Comparator;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -20,6 +21,7 @@ import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 import ch.uzh.csg.mbps.client.request.ServerAccountRequestTask;
 import ch.uzh.csg.mbps.client.util.ClientController;
+import ch.uzh.csg.mbps.client.util.Constants;
 import ch.uzh.csg.mbps.client.util.ServerAccountsTransactionFormatter;
 import ch.uzh.csg.mbps.client.util.TimeHandler;
 import ch.uzh.csg.mbps.model.ServerAccount;
@@ -45,6 +47,7 @@ public class ServerRelationActivity extends AbstractAsyncActivity {
 		
 		setScreenOrientation();
 		getActionBar().setDisplayHomeAsUpEnabled(true);
+		launchServerAccounts(0);
 	}
 	
 	@Override
@@ -143,6 +146,7 @@ public class ServerRelationActivity extends AbstractAsyncActivity {
 			
 			this.urlPage = urlPage;
 
+			Log.i("TAG", String.valueOf(urlPage));
 			ServerAccountsRequestObject request = new ServerAccountsRequestObject();
 			request.setUrlPage(urlPage);
 			
@@ -151,10 +155,13 @@ public class ServerRelationActivity extends AbstractAsyncActivity {
 				public void onTaskComplete(ServerAccountTransferObject response) {
 					dismissProgressDialog();
 					
+					Log.i("TAG", String.valueOf(response.isSuccessful()));
+					displayResponse(response.getMessage());
 					if(response.isSuccessful()) {
 						if(ClientController.isOnline()){
 							startTimer(TimeHandler.getInstance().getRemainingTime(), 1000);
 						}
+						Log.i("TAG", String.valueOf(response == null));
 						
 						sato = response;
 						if (sato != null) {
@@ -162,7 +169,7 @@ public class ServerRelationActivity extends AbstractAsyncActivity {
 						}
 					} else {
 						sato = null;
-						if (response.getMessage() == null) {
+						if (response.getMessage().equals(Constants.CONNECTION_ERROR)) {
 							reload(getIntent());
 							invalidateOptionsMenu();
 						}
@@ -177,6 +184,7 @@ public class ServerRelationActivity extends AbstractAsyncActivity {
 	private void write() {
 		ArrayList<ServerAccount> accounts = new ArrayList<ServerAccount>();
 		
+		Log.i("TAG", sato.toString());
 		if (sato == null)
 			return;
 
