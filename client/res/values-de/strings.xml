@@ -25,10 +25,12 @@
     <!-- Login Strings -->
     <string name="loginUsernameEditText">Benutzername</string>
     <string name="loginPasswordEditText">Passwort</string>
+    <string name="loginServerEditText">URL</string>
     <string name="loginPasswordOrUsernameForgottenTextView">Passwort/Benutzername vergessen</string>
     <string name="loginSignUpBtn">Registrieren</string>
     <string name="loginSignInBtn">Anmelden</string>
     <string name="enter_username_password">Bitte geben Sie Benutzername und Passwort ein</string>
+    <string name="enter_server_url">Bitte geben Sie eine URL ein.</string>
     <string name="establish_internet_connection">Bitte schalten Sie die Internetverbindung ein um fortzufahren.</string>
     <string name="invalid_password">Falsches Passwort.</string>
     <string name="invalid_client_version_title">Update verfügbar</string>
@@ -44,6 +46,7 @@
     <string name="signUpEditEmailText">Email Adresse</string>
     <string name="signUpEditPasswordText">Passwort</string>
     <string name="signUpEditConfirmPasswordText">Passwort bestätigen</string>
+    <string name="signUpEditServerText">URL (optional)</string>
     <string name="signUpTermOfUseTextView">AGB lesen</string>
     <string name="signUpCheckBox">Ich stimme den AGBs zu</string>
     <string name="signUpAgreeBtn">Registrieren</string>
@@ -52,6 +55,7 @@
     <string name="registration_password_lenght_error">Passwort ungültig. Bitte verwenden Sie ein Passwort mit 4 bis 20 Zeichen.</string>
     <string name="registration_username_error">Benutzername ungültig. \nNur Buchstaben und Nummern mit minimal 4 Zeichen sind erlaubt.</string>
     <string name="registration_tou_not_accepted">Bitte lesen und akzeptieren Sie die AGB.</string>
+    <string name="registration_uri_error">URL ungültig.</string>
     <string name="registration_password_not_equal">Passwörter stimmen nicht überein. Bitte erneut versuchen.</string>
     <string name="registration_successful"> Bitte prüfen Sie ihre Emails um ihr Konto zu aktivieren. Ihr Konto wurde erfolgreich erstellt. Ohne Aktivierung können Sie sich nicht anmelden.</string>
     
@@ -82,13 +86,14 @@
         <item>Konto aufladen</item>
         <item>Auszahlen an BTC Adresse</item>
         <item>Adressbuch</item>
+        <item>Beziehungen</item>
         <item>Mit Server verbinden</item>
         <item>Hilfe</item>
         <item>Abmelden</item>
     </string-array>
 
     <!-- History Strings -->
-    <string name="recent_payments">Letzte Transaktionen</string>
+    <string name="recent_payments">Verlauf</string>
     <string name="history_activity_no_transactions_text">Es wurde noch keine Transaktionen getätigt.</string>
     <string name="history_activity_get_by_email">Klicken Sie um eine komplette Liste all ihrer Transaktionen als Email zu erhalten.</string>
 
@@ -99,6 +104,13 @@
         <item>Auszahlungen</item>
     </string-array>
 
+    <!-- Server Relation String -->
+    <string name="relation_server">Beziehungen</string>
+    <string name="relation_activity_no_text">Es wurden keine Beziehungen gefunden.</string>
+	<string name="relation_trust">Beziehung</string>
+    <string name="relation_active">BTC</string>
+    <string name="relation_limit">Limit in BTC</string>
+    
     <!-- Abstract Payment -->
     <string name="payment_failure">Transaktion fehlgeschlagen</string>
     <string name="payment_success">Transaktion erfolgreich</string>
@@ -205,6 +217,7 @@
     <string name="display_default_day">Tag - </string>
     <string name="display_balance_rule">Kontostand Regel</string>
     <string name="display_balance">Kontostand: </string>
+    
     <!-- Payout Rule on item select -->
     <string name="display_time_slots">Sie können nicht mehr als 4 Zeiten auswählen!</string>
     <string name="display_already_selected">Diese Zeit wurde bereits ausgewählt!</string>
@@ -302,7 +315,6 @@
     <string name="firstTimeInfo_instruction_close">Information schliessen</string>
 
     <!-- Shared Preferences -->
-    <string name="stored_username"></string>
     <string name="sharedPreferences_isFirstTime"></string>
     <string name="sharedPreferences_numberOfLastTransactionsTitle">Anzahl letzter Transaktionen</string>
     <string name="sharedPreferences_numberOfLastTransactionsDescription">Anzahl anzuzeigende letzte Transaktionen in Kontoübersicht (Nummer zwischen 1 und 5 eingeben)</string>

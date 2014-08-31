@@ -8,9 +8,11 @@ import java.math.BigDecimal;
  */
 public class Constants {
 //	public static final String BASE_URI = "http://bitcoin.csg.uzh.ch/server";
-	public static final String BASE_URI_SSL = "https://bitcoin.csg.uzh.ch/ws/server";
-//	public static final String BASE_URI = "http://bitcoin-clone2.csg.uzh.ch/server";
-//	public static final String BASE_URI_SSL = "http://bitcoin-clone2.csg.uzh.ch/server";
+//	public static final String BASE_URI_SSL = "https://bitcoin.csg.uzh.ch/server";
+//	public static final String BASE_URI = "http://bitcoin-clone1.csg.uzh.ch/server";
+//	public static final String BASE_URI_SSL = "https://bitcoin-clone1.csg.uzh.ch/server";
+	public static final String BASE_URI = "http://bitcoin-clone2.csg.uzh.ch/server";
+	public static final String BASE_URI_SSL = "http://bitcoin-clone2.csg.uzh.ch/server";
 	
 //	public static final String BASE_URI = "http://192.168.1.49:8080/server";
 //	public static final String BASE_URI_SSL = "http://192.168.1.49:8080/server";
@@ -47,6 +49,8 @@ public class Constants {
 	public static final String MICRO_BTC = "1";
 	
 	public static final String USERNAME_PATTERN = "^[A-Za-z0-9_-]{3,25}$";
+//	public static final String EXCLUDED_URI_PATTERN = "[<>@%'\"/;`\\$]";
+	public static final String URL_PATTERN = "^(http(s)?://)[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]$";
 	public static final String TIME_SESSION_EXPIRED = "Time is expired";
 	public static final String NO_COOKIE_STORED = "No Cookie stored!";
 	
@@ -63,5 +67,10 @@ public class Constants {
 	//TODO simon: put to false when generating apk for play-store
 	//shows (true) or hides (false) buttons specially created for shops etc.
 	public static boolean IS_MENSA_MODE = false;
+
+	//string for storing the last username and url
+	public static final String STORED_STRINGS = "storedStrings";
+	public static final String STORED_USERNAME ="stroredUsername";
+	public static final String STORED_URL ="storedUrl";
 
 }

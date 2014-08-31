@@ -16,7 +16,7 @@
             android:layout_marginTop="50dp"
             android:background="#fff"
             android:hint="@string/loginUsernameEditText"
-            android:inputType="textEmailAddress" />
+            android:inputType="textPersonName" />
 
         <EditText
             android:id="@+id/loginPasswordEditText"
@@ -27,6 +27,16 @@
             android:hint="@string/loginPasswordEditText"
             android:inputType="textPassword" />
 
+		<EditText
+            android:id="@+id/loginServerEditText"
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:layout_marginTop="35dp"
+            android:background="#fff"
+            android:hint="@string/loginServerEditText"
+            android:inputType="textUri" />
+        
+        
         <TextView
             android:id="@+id/loginPasswordOrUsernameForgottenTextView"
             android:layout_width="wrap_content"
