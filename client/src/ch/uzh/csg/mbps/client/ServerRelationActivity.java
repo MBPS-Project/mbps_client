@@ -155,15 +155,13 @@ public class ServerRelationActivity extends AbstractAsyncActivity {
 				public void onTaskComplete(ServerAccountTransferObject response) {
 					dismissProgressDialog();
 					
-					Log.i("TAG", String.valueOf(response.isSuccessful()));
 					displayResponse(response.getMessage());
 					if(response.isSuccessful()) {
 						if(ClientController.isOnline()){
 							startTimer(TimeHandler.getInstance().getRemainingTime(), 1000);
 						}
-						Log.i("TAG", String.valueOf(response == null));
-						
 						sato = response;
+						Log.i("TAG", response.toString());
 						if (sato != null) {
 							write();
 						}
@@ -183,10 +181,12 @@ public class ServerRelationActivity extends AbstractAsyncActivity {
 	
 	private void write() {
 		ArrayList<ServerAccount> accounts = new ArrayList<ServerAccount>();
-		
-		Log.i("TAG", sato.toString());
 		if (sato == null)
 			return;
+		
+		accounts.addAll(sato.getServerAccountList());
+		if(sato.getServerAccountList().size() > urlResultsPerPage)
+			urlResultsPerPage = sato.getServerAccountList().size();
 
 		Collections.sort(accounts, new CustomComparator());
 		createViews(accounts);
@@ -204,9 +204,11 @@ public class ServerRelationActivity extends AbstractAsyncActivity {
 			return;
 		}
 		for(int i = accounts.size()-1; i >= 0; i--){
+			ServerAccount test = accounts.get(i);
+			Log.i("TAG account", test.toString());
 			TextView tv = new TextView(getApplicationContext());
 			tv.setGravity(Gravity.LEFT);
-			tv.setText(ServerAccountsTransactionFormatter.formatHistoryTransaction(accounts.get(i), getApplicationContext()));
+			tv.setText(ServerAccountsTransactionFormatter.formatServerTransaction(accounts.get(i), getApplicationContext()));
             tv.setPadding(0, 5, 0, 5);
             tv.setTextColor(Color.BLACK);
             if(i % 2 == 0){

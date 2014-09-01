@@ -15,12 +15,16 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:text="@string/relation_server"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textSize="54sp"
+		android:textStyle="italic" />
 
     <ScrollView
         android:id="@+id/relation_server_content"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+		android:layout_below="@+id/server_relation_flag" >
 
         <LinearLayout
             android:id="@+id/relation_linearLayout"

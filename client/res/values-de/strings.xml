@@ -107,9 +107,12 @@
     <!-- Server Relation String -->
     <string name="relation_server">Beziehungen</string>
     <string name="relation_activity_no_text">Es wurden keine Beziehungen gefunden.</string>
-	<string name="relation_trust">Beziehung</string>
-    <string name="relation_active">BTC</string>
-    <string name="relation_limit">Limit in BTC</string>
+	<string name="relation_trust">Beziehungsstatus:</string>
+    <string name="relation_active">Verfügbare Limite:</string>
+    <string name="relation_no_trust">Kein Vertrauen</string>
+    <string name="relation_hyprid">Hyprid Vertrauen</string>
+    <string name="relation_high">Volles Vertrauen</string>
+    <string name="relation_default">n.V.</string>
     
     <!-- Abstract Payment -->
     <string name="payment_failure">Transaktion fehlgeschlagen</string>

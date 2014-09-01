@@ -108,8 +108,11 @@
     <string name="relation_server">Relations</string>
     <string name="relation_activity_no_text">There are no relations to display.</string>
     <string name="relation_trust">Trust level:</string>
-    <string name="relation_active">Amount in BTC:</string>
-    <string name="relation_limit">Limit  in BTC</string>
+    <string name="relation_active">Available Limit:</string>
+   	<string name="relation_no_trust">No Trust</string>
+    <string name="relation_hyprid">Hyprid Trust</string>
+    <string name="relation_high">Full Trust</string>
+    <string name="relation_default">n.A.</string>
     
     
     <!-- Abstract Payment -->
