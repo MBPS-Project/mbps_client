@@ -4,6 +4,8 @@ import java.text.SimpleDateFormat;
 import java.util.Locale;
 
 import android.content.Context;
+import android.text.Html;
+import android.text.Spanned;
 import ch.uzh.csg.mbps.client.CurrencyViewHandler;
 import ch.uzh.csg.mbps.client.R;
 import ch.uzh.csg.mbps.model.AbstractHistory;
@@ -23,7 +25,7 @@ public class HistoryTransactionFormatter {
 	 * @param context ApplicationContext to access String ressources
 	 * @return String representation of HistoryTransaction
 	 */
-	public static String formatHistoryTransaction(AbstractHistory tx, Context context){
+	public static Spanned formatHistoryTransaction(AbstractHistory tx, Context context){
 		if(tx instanceof HistoryPayInTransaction) {
 			return formatHistoryPayInTransaction((HistoryPayInTransaction) tx, context);
 		} else if (tx instanceof HistoryPayInTransactionUnverified) {
@@ -35,48 +37,66 @@ public class HistoryTransactionFormatter {
 		}
 	}
 	
-	private static String formatHistoryPayInTransaction(HistoryPayInTransaction tx, Context context) {
+	private static Spanned formatHistoryPayInTransaction(HistoryPayInTransaction tx, Context context) {
 		StringBuilder sb = new StringBuilder();
 		sb.append(sdf.format(tx.getTimestamp()));
-		sb.append("\n");
-		sb.append(context.getResources().getString(R.string.history_payIn) + " \n");
-		sb.append(CurrencyViewHandler.formatBTCAsString(tx.getAmount(), context));
-		return sb.toString();
+		sb.append("<br>");
+		sb.append(context.getResources().getString(R.string.history_payIn));
+		sb.append("<br>");
+		sb.append("<b>"+CurrencyViewHandler.formatBTCAsString(tx.getAmount(), context)+"</b>");
+		Spanned text = Html.fromHtml(sb.toString());
+		return text;
 	}
 	
-	private static String formatHistoryPayInTransactionUnverified(HistoryPayInTransactionUnverified tx, Context context) {
+	private static Spanned formatHistoryPayInTransactionUnverified(HistoryPayInTransactionUnverified tx, Context context) {
 		StringBuilder sb = new StringBuilder();
 		sb.append(sdf.format(tx.getTimestamp()));
-		sb.append("\n");
-		sb.append(context.getResources().getString(R.string.history_payInUn) + " \n");
-		sb.append(CurrencyViewHandler.formatBTCAsString(tx.getAmount(), context));
-		return sb.toString();
+		sb.append("<br>");
+		sb.append(context.getResources().getString(R.string.history_payInUn));
+		sb.append("<br>");
+		sb.append("<b>"+CurrencyViewHandler.formatBTCAsString(tx.getAmount(), context)+"</b>");
+		Spanned text = Html.fromHtml(sb.toString());
+		return text;
 	}
 	
-	private static String formatHistoryPayOuTransaction(HistoryPayOutTransaction tx, Context context) {
+	private static Spanned formatHistoryPayOuTransaction(HistoryPayOutTransaction tx, Context context) {
 		StringBuilder sb = new StringBuilder();
 		sb.append(sdf.format(tx.getTimestamp()));
-		sb.append("\n");
+		sb.append("<br>");
 		sb.append(context.getResources().getString(R.string.history_payOut) + " ");
-		sb.append(CurrencyViewHandler.formatBTCAsString(tx.getAmount(), context));
-		sb.append(" " + context.getResources().getString(R.string.history_payOutTo) + " ");
+		sb.append("<b>"+CurrencyViewHandler.formatBTCAsString(tx.getAmount(), context)+"</b>");
+		sb.append("<br>");
+		sb.append(context.getResources().getString(R.string.history_payOutTo) + " ");
 		sb.append(tx.getBtcAddress());
-		return sb.toString();
-		
+		Spanned text = Html.fromHtml(sb.toString());
+		return text;
 	}
 	
-	private static String formatHistoryNormalTransaction(HistoryTransaction tx, Context context) {
+	private static Spanned formatHistoryNormalTransaction(HistoryTransaction tx, Context context) {
+		String username = ClientController.getUsersUsername();
+		String serverName = ClientController.getUsersServer();
+		
 		StringBuilder sb = new StringBuilder();
 		sb.append(sdf.format(tx.getTimestamp()));
-		sb.append(" " + context.getResources().getString(R.string.history_from) + " ");
-		sb.append(tx.getBuyer());
-		sb.append(", " + context.getResources().getString(R.string.history_to) + " ");
-		sb.append(tx.getSeller());
-		sb.append(", " + context.getResources().getString(R.string.history_amount) + " ");
-		sb.append(CurrencyViewHandler.formatBTCAsString(tx.getAmount(), context));
+		sb.append("<br>");
+		if(!username.equals(tx.getBuyer())){
+			sb.append(context.getResources().getString(R.string.history_from) + " ");
+			sb.append("<b>"+tx.getBuyer()+"</b>");
+			if(!serverName.equals(tx.getBuyerServer()))
+				sb.append(" ("+tx.getBuyerServer()+")");
+		}
+		if(!username.equals(tx.getSeller())){
+			sb.append(", " + context.getResources().getString(R.string.history_to) + " ");
+			sb.append("<b>"+tx.getSeller()+"</b>");
+			if(!serverName.equals(tx.getSellerSever()))
+				sb.append(" ("+tx.getSellerSever()+")");
+		}
+		sb.append("<br>");
+		sb.append(context.getResources().getString(R.string.history_amount) + " ");
+		sb.append("<b>"+CurrencyViewHandler.formatBTCAsString(tx.getAmount(), context)+"<b>");
 		if(tx.getInputCurrency() != null) {
 			sb.append(" (" + tx.getInputCurrencyAmount()  + " " + tx.getInputCurrency() + ")");
 		}
-		return sb.toString();
+		return null;
 	}
 }

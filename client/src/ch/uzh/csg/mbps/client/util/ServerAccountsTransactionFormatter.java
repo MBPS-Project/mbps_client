@@ -27,6 +27,8 @@ public class ServerAccountsTransactionFormatter {
 		sb.append("<b>"+trust+"</b>");
 		sb.append("<br>" + context.getResources().getString(R.string.relation_active) + " ");
 		sb.append("<b>" + CurrencyViewHandler.formatBTCAsString(amount, context)+"</b>");
+		sb.append("<br>" + context.getResources().getString(R.string.relation_user_limit) + " ");
+		sb.append("<b>"+CurrencyViewHandler.formatBTCAsString(account.getUserBalanceLimit(), context)+"</b>");
 		
 		Spanned text = Html.fromHtml(sb.toString());
 		return text;
