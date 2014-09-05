@@ -57,7 +57,8 @@ public class AccountProfileActivity extends AbstractAsyncActivity {
 		TextView username = (TextView) findViewById(R.id.profileUsernameText);
 		TextView email = (TextView) findViewById(R.id.profileEmailText);
 
-		username.setText(ClientController.getStorageHandler().getUserAccount().getUsername());
+		String usersUsername = ClientController.getUsersUsername();
+		username.setText(usersUsername);
 		email.setText(ClientController.getStorageHandler().getUserAccount().getEmail());
 	}
 	
