@@ -68,4 +68,13 @@ public class ClientController {
 		internalStorageHandler = null;
 	}
 
+	public static String getUsersUsername(){
+		int splitIndex =internalStorageHandler.getUserAccount().getUsername().indexOf(Constants.SPLIT_USERNAME);
+		return internalStorageHandler.getUserAccount().getUsername().substring(0, splitIndex);
+	}
+	
+	public static String getUsersServer(){
+		int splitIndex = internalStorageHandler.getUserAccount().getUsername().indexOf(Constants.SPLIT_USERNAME);
+		return internalStorageHandler.getUserAccount().getUsername().substring(splitIndex + 1);
+	}
 }
