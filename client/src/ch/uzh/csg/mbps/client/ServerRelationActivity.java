@@ -204,8 +204,6 @@ public class ServerRelationActivity extends AbstractAsyncActivity {
 			return;
 		}
 		for(int i = accounts.size()-1; i >= 0; i--){
-			ServerAccount test = accounts.get(i);
-			Log.i("TAG account", test.toString());
 			TextView tv = new TextView(getApplicationContext());
 			tv.setGravity(Gravity.LEFT);
 			tv.setText(ServerAccountsTransactionFormatter.formatServerTransaction(accounts.get(i), getApplicationContext()));

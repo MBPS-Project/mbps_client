@@ -160,6 +160,8 @@ public class RegistrationActivity extends AbstractAsyncActivity{
 		data.putExtra("username", this.username);
 		if(!this.serverUrl.isEmpty())
 			data.putExtra("serverUrl", this.serverUrl);
+		else
+			data.putExtra("serverUrl", BaseUriHandler.getInstance().getBaseUriSSL());
 		setResult(RESULT_OK,data);
 		startActivity(data);
 		super.finish();
