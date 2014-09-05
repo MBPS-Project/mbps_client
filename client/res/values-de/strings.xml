@@ -112,6 +112,7 @@
     <string name="relation_no_trust">Kein Vertrauen</string>
     <string name="relation_hyprid">Hyprid Vertrauen</string>
     <string name="relation_high">Volles Vertrauen</string>
+    <string name="relation_user_limit">Die Ausgabehöhe pro Teilnehmer:</string>
     <string name="relation_default">n.V.</string>
     
     <!-- Abstract Payment -->

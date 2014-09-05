@@ -112,6 +112,7 @@
    	<string name="relation_no_trust">No Trust</string>
     <string name="relation_hyprid">Hyprid Trust</string>
     <string name="relation_high">Full Trust</string>
+    <string name="relation_user_limit">The user limit is:</string>
     <string name="relation_default">n.A.</string>
     
     
