@@ -68,6 +68,7 @@ public class Constants {
 	//shows (true) or hides (false) buttons specially created for shops etc.
 	public static boolean IS_MENSA_MODE = false;
 
+	public static final String SPLIT_USERNAME = "@";
 	//string for storing the last username and url
 	public static final String STORED_STRINGS = "storedStrings";
 	public static final String STORED_USERNAME ="stroredUsername";
