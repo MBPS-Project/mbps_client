@@ -11,11 +11,16 @@ public class Constants {
 //	public static final String BASE_URI_SSL = "https://bitcoin.csg.uzh.ch/server";
 //	public static final String BASE_URI = "http://bitcoin-clone1.csg.uzh.ch/server";
 //	public static final String BASE_URI_SSL = "https://bitcoin-clone1.csg.uzh.ch/server";
+	public static final String URI = "http://bitcoin-clone2.csg.uzh.ch";
+	public static final String URI_SSL = "http://bitcoin-clone2.csg.uzh.ch";
+	public static final String PATH = "/server";
 	public static final String BASE_URI = "http://bitcoin-clone2.csg.uzh.ch/server";
 	public static final String BASE_URI_SSL = "http://bitcoin-clone2.csg.uzh.ch/server";
-	
+//	public static final String URI = "http://localhost:8089";
+//	public static final String URI_SSL = "http://localhost:8089";
+//	public static final String BASE_URI_SSL = "http://192.168.192.55:8089/mbps-server";
 //	public static final String BASE_URI = "http://192.168.1.49:8080/server";
-//	public static final String BASE_URI_SSL = "http://192.168.1.49:8080/server";
+//	public static final String BASE_URI_SSL = "http://192.168.1.49:8080/server";	
 	
 	/*
 	 * The client version number helps to check if a version has been published

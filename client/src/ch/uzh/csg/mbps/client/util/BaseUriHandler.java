@@ -9,16 +9,12 @@ package ch.uzh.csg.mbps.client.util;
 public class BaseUriHandler {
 
 	private static BaseUriHandler baseUriHandler;
-	private static String baseUri;
 	private static String baseUriSSL;
+	private static String uri;
 	
 	private BaseUriHandler(){
-		if(baseUri == null){
-			baseUri = Constants.BASE_URI;
-		}
-		
 		if(baseUriSSL == null){
-			baseUriSSL = Constants.BASE_URI_SSL;
+			baseUriSSL = Constants.URI_SSL + Constants.PATH;
 		}
 	}
 	
@@ -29,27 +25,25 @@ public class BaseUriHandler {
 		return baseUriHandler;
 	}
 	
-	public String getBaseUri(){
-		return baseUri;
-	}
-	
 	public String getBaseUriSSL(){
 		return baseUriSSL;
 	}
 	
-	public void setBaseUri(String uri){
-		baseUri = uri;
-	}
-	
-	public void setBaseUriSSL(String uriSSL){
+	private void setBaseUriSSL(String uriSSL){
 		baseUriSSL = uriSSL;
 	}
 	
-	public void setDefaultBaseUri(){
-		baseUri = Constants.BASE_URI;
+	public void setDefaultBaseUriSSL(){
+		setBaseUriSSL(Constants.URI_SSL + Constants.PATH);
+		uri = Constants.URI_SSL;
 	}
 	
-	public void setDefaultBaseUriSSL(){
-		baseUriSSL = Constants.BASE_URI_SSL;
+	public void setUri(String url){
+		uri = url;
+		setBaseUriSSL(url+Constants.PATH);
+	}
+	
+	public  String getUri(){
+		return uri;
 	}
 }

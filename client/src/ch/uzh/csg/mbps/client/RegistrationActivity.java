@@ -69,8 +69,6 @@ public class RegistrationActivity extends AbstractAsyncActivity{
 	  	createAccountBtn.setOnClickListener(new View.OnClickListener() {
 	  		public void onClick(View v) {
 	  			initInputInformation();
-//	  			if(serverUrl.isEmpty())
-//	  				serverUrl = "";
 	  			Pair<Boolean, String> responseContent = CheckFormatHandler.checkRegistrationInputs(getApplicationContext(), username, email, password, confirmPassword, serverUrl, termOfUseChecked);
 				if (responseContent.first) {
 					launchCreateRequest();
@@ -99,13 +97,15 @@ public class RegistrationActivity extends AbstractAsyncActivity{
 	
 	private void launchCreateRequest() {
 		showLoadingProgressDialog();
-		if(serverUrl.isEmpty())
+		if(serverUrl.isEmpty()){			
+			BaseUriHandler.getInstance().setDefaultBaseUriSSL();
 			serverUrl = BaseUriHandler.getInstance().getBaseUriSSL();
-		else
-			BaseUriHandler.getInstance().setBaseUriSSL(serverUrl);
-		String usernameServerUrl = this.username +"@" + serverUrl;
+		}
+		else{			
+			BaseUriHandler.getInstance().setUri(serverUrl);
+		}
 		UserAccountObject user = new UserAccountObject();
-		user.setUsername(usernameServerUrl);
+		user.setUsername(username + Constants.SPLIT_USERNAME + BaseUriHandler.getInstance().getBaseUriSSL());
 		user.setEmail(email);
 		user.setPassword(password);
 		
@@ -158,10 +158,13 @@ public class RegistrationActivity extends AbstractAsyncActivity{
 		Intent data = new Intent();
 		data.setClass(RegistrationActivity.this, LoginActivity.class);
 		data.putExtra("username", this.username);
-		if(!this.serverUrl.isEmpty())
+		if(!this.serverUrl.isEmpty()){			
 			data.putExtra("serverUrl", this.serverUrl);
-		else
+		}
+		else{
+			BaseUriHandler.getInstance().setDefaultBaseUriSSL();
 			data.putExtra("serverUrl", BaseUriHandler.getInstance().getBaseUriSSL());
+		}
 		setResult(RESULT_OK,data);
 		startActivity(data);
 		super.finish();

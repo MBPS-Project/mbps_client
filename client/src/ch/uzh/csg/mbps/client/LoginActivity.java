@@ -84,7 +84,6 @@ public class LoginActivity extends AbstractLoginActivity{
 				username = ((EditText) findViewById(R.id.loginUsernameEditText)).getText().toString();
 				password = ((EditText) findViewById(R.id.loginPasswordEditText)).getText().toString();
 				serverUrl = ((EditText) findViewById(R.id.loginServerEditText)).getText().toString();
-				usernameUrl = username+"@"+serverUrl;
 				
 				if (username.isEmpty() || password.isEmpty())
 					displayResponse(getResources().getString(R.string.enter_username_password));
