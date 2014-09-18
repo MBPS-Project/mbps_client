@@ -1,9 +1,9 @@
 package ch.uzh.csg.mbps.client.request;
 
-import android.content.Context;
 import net.minidev.json.JSONObject;
+import android.content.Context;
 import ch.uzh.csg.mbps.client.IAsyncTaskCompleteListener;
-import ch.uzh.csg.mbps.client.util.Constants;
+import ch.uzh.csg.mbps.client.util.BaseUriHandler;
 import ch.uzh.csg.mbps.responseobject.ServerAccountTransferObject;
 import ch.uzh.csg.mbps.responseobject.ServerAccountsRequestObject;
 
@@ -13,7 +13,7 @@ import ch.uzh.csg.mbps.responseobject.ServerAccountsRequestObject;
 public class ServerAccountRequestTask extends RequestTask<ServerAccountsRequestObject, ServerAccountTransferObject> {
 	
 	public ServerAccountRequestTask(IAsyncTaskCompleteListener<ServerAccountTransferObject> cro, ServerAccountsRequestObject input, ServerAccountTransferObject output, Context context) {
-		super(input, output, Constants.BASE_URI_SSL + "/serveraccounts/accounts", cro, context);
+		super(input, output, BaseUriHandler.getInstance().getBaseUriSSL() + "/serveraccounts/accounts", cro, context);
 	}
 
 	@Override

@@ -1,9 +1,9 @@
 package ch.uzh.csg.mbps.client.request;
 
-import android.content.Context;
 import net.minidev.json.JSONObject;
+import android.content.Context;
 import ch.uzh.csg.mbps.client.IAsyncTaskCompleteListener;
-import ch.uzh.csg.mbps.client.util.Constants;
+import ch.uzh.csg.mbps.client.util.BaseUriHandler;
 import ch.uzh.csg.mbps.responseobject.TransactionObject;
 
 /**
@@ -12,7 +12,7 @@ import ch.uzh.csg.mbps.responseobject.TransactionObject;
 public class TransactionRequestTask extends RequestTask<TransactionObject, TransactionObject> {
 
 	public TransactionRequestTask(IAsyncTaskCompleteListener<TransactionObject> cro, TransactionObject input, TransactionObject output, Context context) {
-		super(input, output, Constants.BASE_URI_SSL + "/transaction/create", cro, context);
+		super(input, output, BaseUriHandler.getInstance().getBaseUriSSL() + "/transaction/create", cro, context);
 	}
 
 	@Override

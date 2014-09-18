@@ -2,7 +2,7 @@ package ch.uzh.csg.mbps.client.request;
 
 import android.content.Context;
 import ch.uzh.csg.mbps.client.IAsyncTaskCompleteListener;
-import ch.uzh.csg.mbps.client.util.Constants;
+import ch.uzh.csg.mbps.client.util.BaseUriHandler;
 import ch.uzh.csg.mbps.responseobject.TransferObject;
 
 /**
@@ -11,7 +11,7 @@ import ch.uzh.csg.mbps.responseobject.TransferObject;
 public class DeleteRequestTask extends RequestTask<TransferObject, TransferObject> {
 	
 	public DeleteRequestTask(IAsyncTaskCompleteListener<TransferObject> cro, TransferObject input, TransferObject output, Context context) {
-		super(input, output, Constants.BASE_URI_SSL + "/user/delete/", cro, context);
+		super(input, output, BaseUriHandler.getInstance().getBaseUriSSL() + "/user/delete/", cro, context);
 	}
 
 	@Override

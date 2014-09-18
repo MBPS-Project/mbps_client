@@ -1,9 +1,9 @@
 package ch.uzh.csg.mbps.client.request;
 
-import android.content.Context;
 import net.minidev.json.JSONObject;
+import android.content.Context;
 import ch.uzh.csg.mbps.client.IAsyncTaskCompleteListener;
-import ch.uzh.csg.mbps.client.util.Constants;
+import ch.uzh.csg.mbps.client.util.BaseUriHandler;
 import ch.uzh.csg.mbps.responseobject.GetHistoryTransferObject;
 import ch.uzh.csg.mbps.responseobject.HistoryTransferRequestObject;
 
@@ -13,7 +13,7 @@ import ch.uzh.csg.mbps.responseobject.HistoryTransferRequestObject;
 public class HistoryRequestTask extends RequestTask<HistoryTransferRequestObject, GetHistoryTransferObject> {
 	
 	public HistoryRequestTask(IAsyncTaskCompleteListener<GetHistoryTransferObject> cro, HistoryTransferRequestObject input, GetHistoryTransferObject output, Context context) {
-		super(input, output, Constants.BASE_URI_SSL + "/transaction/history", cro, context);
+		super(input, output, BaseUriHandler.getInstance().getBaseUriSSL() + "/transaction/history", cro, context);
 	}
 
 	@Override

@@ -1,9 +1,9 @@
 package ch.uzh.csg.mbps.client.request;
 
-import android.content.Context;
 import net.minidev.json.JSONObject;
+import android.content.Context;
 import ch.uzh.csg.mbps.client.IAsyncTaskCompleteListener;
-import ch.uzh.csg.mbps.client.util.Constants;
+import ch.uzh.csg.mbps.client.util.BaseUriHandler;
 import ch.uzh.csg.mbps.responseobject.TransferObject;
 
 /**
@@ -18,7 +18,7 @@ public class HistoryEmailRequestTask extends RequestTask<TransferObject, Transfe
 	public static final int PAY_OUT_HISTORY = 3;
 	
 	public HistoryEmailRequestTask(IAsyncTaskCompleteListener<TransferObject> cro, TransferObject input, TransferObject output, Context context) {
-		super(input, output, Constants.BASE_URI_SSL + "/transaction/history/getByEmail", cro, context);
+		super(input, output, BaseUriHandler.getInstance().getBaseUriSSL() + "/transaction/history/getByEmail", cro, context);
 	}
 
 	@Override

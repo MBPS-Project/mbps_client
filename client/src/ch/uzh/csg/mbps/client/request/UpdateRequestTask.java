@@ -1,9 +1,9 @@
 package ch.uzh.csg.mbps.client.request;
 
-import android.content.Context;
 import net.minidev.json.JSONObject;
+import android.content.Context;
 import ch.uzh.csg.mbps.client.IAsyncTaskCompleteListener;
-import ch.uzh.csg.mbps.client.util.Constants;
+import ch.uzh.csg.mbps.client.util.BaseUriHandler;
 import ch.uzh.csg.mbps.responseobject.TransferObject;
 import ch.uzh.csg.mbps.responseobject.UserAccountObject;
 
@@ -14,7 +14,7 @@ import ch.uzh.csg.mbps.responseobject.UserAccountObject;
 public class UpdateRequestTask extends RequestTask<UserAccountObject, TransferObject> {	
 	
 	public UpdateRequestTask(IAsyncTaskCompleteListener<TransferObject> cro, UserAccountObject input, TransferObject output, Context context) {
-		super(input, output, Constants.BASE_URI_SSL + "/user/update", cro, context);
+		super(input, output, BaseUriHandler.getInstance().getBaseUriSSL() + "/user/update", cro, context);
 	}
 
 	@Override

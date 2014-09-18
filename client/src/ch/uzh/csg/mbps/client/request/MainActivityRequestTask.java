@@ -2,7 +2,7 @@ package ch.uzh.csg.mbps.client.request;
 
 import android.content.Context;
 import ch.uzh.csg.mbps.client.IAsyncTaskCompleteListener;
-import ch.uzh.csg.mbps.client.util.Constants;
+import ch.uzh.csg.mbps.client.util.BaseUriHandler;
 import ch.uzh.csg.mbps.responseobject.MainRequestObject;
 import ch.uzh.csg.mbps.responseobject.TransferObject;
 
@@ -12,7 +12,7 @@ import ch.uzh.csg.mbps.responseobject.TransferObject;
 public class MainActivityRequestTask extends RequestTask<TransferObject, MainRequestObject> {
 	
 	public MainActivityRequestTask(IAsyncTaskCompleteListener<MainRequestObject> cro, TransferObject input, MainRequestObject output, Context context) {
-		super(input, output, Constants.BASE_URI_SSL + "/user/mainActivityRequests", cro, context);
+		super(input, output, BaseUriHandler.getInstance().getBaseUriSSL() + "/user/mainActivityRequests", cro, context);
 	}
 
 	@Override

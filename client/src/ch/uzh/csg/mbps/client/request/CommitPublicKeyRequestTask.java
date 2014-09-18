@@ -1,9 +1,9 @@
 package ch.uzh.csg.mbps.client.request;
 
-import android.content.Context;
 import net.minidev.json.JSONObject;
+import android.content.Context;
 import ch.uzh.csg.mbps.client.IAsyncTaskCompleteListener;
-import ch.uzh.csg.mbps.client.util.Constants;
+import ch.uzh.csg.mbps.client.util.BaseUriHandler;
 import ch.uzh.csg.mbps.keys.CustomPublicKey;
 import ch.uzh.csg.mbps.responseobject.CustomPublicKeyObject;
 import ch.uzh.csg.mbps.responseobject.TransferObject;
@@ -18,7 +18,7 @@ import ch.uzh.csg.mbps.responseobject.TransferObject;
 public class CommitPublicKeyRequestTask extends RequestTask<CustomPublicKeyObject, TransferObject> {
 	
 	public CommitPublicKeyRequestTask(IAsyncTaskCompleteListener<TransferObject> cro, CustomPublicKeyObject input, CustomPublicKeyObject output, Context context) {
-		super(input, output, Constants.BASE_URI_SSL + "/user/savePublicKey", cro, context);
+		super(input, output, BaseUriHandler.getInstance().getBaseUriSSL() + "/user/savePublicKey", cro, context);
 	}
 
 	@Override
