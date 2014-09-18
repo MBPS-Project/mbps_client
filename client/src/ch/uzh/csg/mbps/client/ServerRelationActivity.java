@@ -155,7 +155,6 @@ public class ServerRelationActivity extends AbstractAsyncActivity {
 				public void onTaskComplete(ServerAccountTransferObject response) {
 					dismissProgressDialog();
 					
-					displayResponse(response.getMessage());
 					if(response.isSuccessful()) {
 						if(ClientController.isOnline()){
 							startTimer(TimeHandler.getInstance().getRemainingTime(), 1000);
