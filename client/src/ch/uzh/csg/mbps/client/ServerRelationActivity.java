@@ -7,7 +7,6 @@ import java.util.Comparator;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -146,7 +145,6 @@ public class ServerRelationActivity extends AbstractAsyncActivity {
 			
 			this.urlPage = urlPage;
 
-			Log.i("TAG", String.valueOf(urlPage));
 			ServerAccountsRequestObject request = new ServerAccountsRequestObject();
 			request.setUrlPage(urlPage);
 			
@@ -160,7 +158,6 @@ public class ServerRelationActivity extends AbstractAsyncActivity {
 							startTimer(TimeHandler.getInstance().getRemainingTime(), 1000);
 						}
 						sato = response;
-						Log.i("TAG", response.toString());
 						if (sato != null) {
 							write();
 						}
